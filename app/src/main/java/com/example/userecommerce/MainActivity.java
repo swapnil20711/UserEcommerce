@@ -28,17 +28,17 @@ public class MainActivity extends AppCompatActivity {
                 binding.numberPickerg.setMaxValue(19);
                 setPickerG(" g", binding);
                 setPickerKg();
+                binding.numberPickerKg.setValue(weightKg);
                 binding.numberPickerKg.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @Override
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                        if (newVal>weightKg) {
+                        if (newVal > weightKg) {
                             binding.numberPickerg.setMinValue(0);
-                            setPickerG(" g",binding);
+                            setPickerG(" g", binding);
                         } else {
                             binding.numberPickerg.setMinValue(weightG / 50);
-                            binding.numberPickerKg.setValue(weightKg);
                             binding.numberPickerg.setMaxValue(19);
-                            setPickerG(" g",binding);
+                            setPickerG(" g", binding);
                         }
                     }
                 });
