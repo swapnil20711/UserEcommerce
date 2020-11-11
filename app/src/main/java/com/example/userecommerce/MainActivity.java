@@ -31,12 +31,12 @@ public class MainActivity extends AppCompatActivity {
                 binding.numberPickerKg.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @Override
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                        int value=binding.numberPickerg.getValue();
-                        if (value>weightKg) {
+                        if (newVal>weightKg) {
                             binding.numberPickerg.setMinValue(0);
                             setPickerG(" g",binding);
                         } else {
                             binding.numberPickerg.setMinValue(weightG / 50);
+                            binding.numberPickerKg.setValue(weightKg);
                             binding.numberPickerg.setMaxValue(19);
                             setPickerG(" g",binding);
                         }
