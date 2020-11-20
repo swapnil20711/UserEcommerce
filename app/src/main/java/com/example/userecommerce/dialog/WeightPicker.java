@@ -61,9 +61,9 @@ public class WeightPicker implements Serializable {
         if (cart.cartItemMap.containsKey(product.name)) {
             float qty = cart.cartItemMap.get(product.name).qty;
             binding.numberPickerKg.setValue((int) qty);
-            int setValue = (int) ((qty - (int) qty) * 1000 / 50);
-            Log.e("weightChanged",setValue+"");
-            binding.numberPickerg.setValue(setValue);
+            float val = Math.round(((qty - (int) qty) * 1000)/ 50);
+            Log.e("weightChanged", val + "");
+            binding.numberPickerg.setValue((int) val);
         }
     }
 
@@ -73,7 +73,7 @@ public class WeightPicker implements Serializable {
     }
 
     private void setUpNumberPickers() {
-        Float minQty = product.minQty * 1000;
+        double minQty = product.minQty * 1000;
         int weightKg = (int) (minQty / 1000);
         int weightG = (int) (minQty % 1000) / 50;
         Log.e("weightPicker", weightKg + "kg " + weightG + " g");
