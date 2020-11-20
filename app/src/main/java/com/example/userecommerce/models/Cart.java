@@ -1,12 +1,15 @@
 package com.example.userecommerce.models;
 
+import com.example.userecommerce.databinding.VariantItemBinding;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Cart {
+public class Cart implements Serializable {
     public int subTotal = 0, noOfItems;
-    Map<String, CartItem> cartItemMap = new HashMap<>();
-    Map<String, Integer> totalCartItems = new HashMap<>();
+    public Map<String, Integer> totalVariantsCart = new HashMap<>();
+    public Map<String, CartItem> cartItemMap = new HashMap<>();
 
     public int addVariantBasedProductToCart(Product product, Variant variant) {
         String key = product.name + " " + variant.name;
@@ -20,11 +23,11 @@ public class Cart {
         noOfItems++;
         subTotal += variant.price;
         System.out.println(subTotal);
-        if (totalCartItems.containsKey(product.name)) {
-            int qty = totalCartItems.get(product.name) + 1;
-            totalCartItems.put(product.name, qty);
+        if (totalVariantsCart.containsKey(product.name)) {
+            int qty = totalVariantsCart.get(product.name) + 1;
+            totalVariantsCart.put(product.name, qty);
         } else {
-            totalCartItems.put(product.name, 1);
+            totalVariantsCart.put(product.name, 1);
         }
         return (int) cartItemMap.get(key).qty;
     }
@@ -40,10 +43,10 @@ public class Cart {
                 cartItemMap.remove(key);
             }
 
-            int qty = totalCartItems.get(product.name) - 1;
-            totalCartItems.put(product.name, qty);
+            int qty = totalVariantsCart.get(product.name) - 1;
+            totalVariantsCart.put(product.name, qty);
             if (qty == 0) {
-                totalCartItems.remove(product.name);
+                totalVariantsCart.remove(product.name);
             }
         }
         return cartItemMap.containsKey(key) ? (int) cartItemMap.get(key).qty : 0;
@@ -81,7 +84,7 @@ public class Cart {
                 cartItemMap.remove(key);
             }
         }
-        totalCartItems.remove(product.name);
+        totalVariantsCart.remove(product.name);
 
 
     }
@@ -93,7 +96,16 @@ public class Cart {
                 "subTotal=" + subTotal +
                 ", noOfItems=" + noOfItems +
                 ", cartItemMap=" + cartItemMap +
-                ", totalCartItems=" + totalCartItems +
+                ", totalVariantsCart=" + totalVariantsCart +
                 '}';
+    }
+
+    public int getVariantQuantity(Variant variant, Product product) {
+        String key=product.name+" "+variant.name;
+        if (cartItemMap.containsKey(key)){
+            return (int) cartItemMap.get(key).qty;
+        }
+        return 0;
+
     }
 }

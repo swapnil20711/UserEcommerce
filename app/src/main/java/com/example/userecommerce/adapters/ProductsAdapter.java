@@ -14,6 +14,7 @@ import com.example.userecommerce.databinding.ProductItemWbMultiVbBinding;
 import com.example.userecommerce.models.Cart;
 import com.example.userecommerce.models.Product;
 
+import java.io.Serializable;
 import java.util.List;
 
 //Adapter for list of products

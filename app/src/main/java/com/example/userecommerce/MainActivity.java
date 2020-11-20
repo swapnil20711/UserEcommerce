@@ -1,5 +1,6 @@
 package com.example.userecommerce;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.userecommerce.models.Cart;
 import com.example.userecommerce.models.Product;
 import com.example.userecommerce.models.Variant;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Variant v = new Variant("1kg", 45);
         Variant v1 = new Variant("2kg", 90);
-        List<Product> list = Arrays.asList(new Product("kiwi", Arrays.asList(v)),
-                new Product("apple",45,1.5f),
-                new Product("kiwi",Arrays.asList(v,v1))
+        List<Product> list = Arrays.asList(new Product("Mango", Arrays.asList(v)),
+                new Product("apple", 45, 1.0f),
+                new Product("kiwi", Arrays.asList(v, v1))
         );
         ProductsAdapter adapter = new ProductsAdapter(this, list, cart);
 
@@ -46,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
         DividerItemDecoration itemDecor = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         b.recyclerView.addItemDecoration(itemDecor);
         b.recyclerView.setAdapter(adapter);
+        b.checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                intent.putExtra("data", cart);
+                startActivity(intent);
+            }
+        });
     }
 
     public void updateCartSummary() {

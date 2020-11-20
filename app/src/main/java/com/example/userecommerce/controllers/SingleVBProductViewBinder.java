@@ -9,7 +9,9 @@ import com.example.userecommerce.databinding.ProductItemSingleVbBinding;
 import com.example.userecommerce.models.Cart;
 import com.example.userecommerce.models.Product;
 
-public class SingleVBProductViewBinder {
+import java.io.Serializable;
+
+public class SingleVBProductViewBinder implements Serializable {
     private ProductItemSingleVbBinding binding;
     private Cart cart = new Cart();
 
