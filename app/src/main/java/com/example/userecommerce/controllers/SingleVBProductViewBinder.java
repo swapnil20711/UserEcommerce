@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 public class SingleVBProductViewBinder implements Serializable {
     private ProductItemSingleVbBinding binding;
-    private Cart cart;
+    private Cart cart = new Cart();
 
     public void bind(ProductItemSingleVbBinding binding, Product product, Cart cart) {
         this.binding = binding;

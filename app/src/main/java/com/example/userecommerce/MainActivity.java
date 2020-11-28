@@ -2,7 +2,6 @@ package com.example.userecommerce;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -17,13 +16,11 @@ import com.example.userecommerce.databinding.ActivityMainBinding;
 import com.example.userecommerce.models.Cart;
 import com.example.userecommerce.models.Inventory;
 import com.example.userecommerce.models.Product;
-import com.example.userecommerce.models.Variant;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -81,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                     list=new ArrayList<>();
                 }
                 setUpProductList();
-
                 app.hideLoadingDialog();
             }
         })

@@ -96,12 +96,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void updateCart(Cart newCart) {
-        cart.noOfItems = newCart.noOfItems;
-        cart.subTotal = newCart.subTotal;
-        cart.cartItemMap = newCart.cartItemMap;
-    }
-
     public static class MultipleVBWBVH extends RecyclerView.ViewHolder {
 
         ProductItemWbMultiVbBinding binding;
