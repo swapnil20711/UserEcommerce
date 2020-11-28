@@ -99,7 +99,6 @@ public class Cart implements Serializable {
                 ", totalVariantsCart=" + totalVariantsCart +
                 '}';
     }
-
     public int getVariantQuantity(Variant variant, Product product) {
         String key=product.name+" "+variant.name;
         if (cartItemMap.containsKey(key)){

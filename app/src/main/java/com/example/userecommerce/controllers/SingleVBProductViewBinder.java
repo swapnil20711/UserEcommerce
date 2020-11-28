@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 public class SingleVBProductViewBinder implements Serializable {
     private ProductItemSingleVbBinding binding;
-    private Cart cart = new Cart();
+    private Cart cart;
 
     public void bind(ProductItemSingleVbBinding binding, Product product, Cart cart) {
         this.binding = binding;
@@ -46,7 +46,7 @@ public class SingleVBProductViewBinder implements Serializable {
     private void updateCheckoutSummary() {
         Context context = binding.getRoot().getContext();
         if(context instanceof MainActivity){
-            ((MainActivity) context).updateCartSummary();
+            ((MainActivity) context).updateCartSummary(cart);
         } else {
             Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
         }

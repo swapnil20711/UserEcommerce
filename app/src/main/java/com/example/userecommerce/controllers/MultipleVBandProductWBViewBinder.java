@@ -97,7 +97,7 @@ public class MultipleVBandProductWBViewBinder {
     private void updateCheckoutSummary() {
         Context context = b.getRoot().getContext();
         if (context instanceof MainActivity) {
-            ((MainActivity) context).updateCartSummary();
+            ((MainActivity) context).updateCartSummary(cart);
         } else {
             Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
         }

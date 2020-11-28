@@ -17,7 +17,7 @@ public class Product implements Serializable {
     public int qty;
     public float minQty;
     //Type to store WEIGHT_BASED & PRODUCT_BASED
-    public byte type;
+    public int type;
     public List<Variant> variants;
 
 
@@ -27,7 +27,9 @@ public class Product implements Serializable {
         this.minQty = minQty;
         this.type = WEIGHT_BASED;
     }
+    public Product(){
 
+    }
     public Product(String name) {
         this.name = name;
         this.type = VARIANT_BASED;
