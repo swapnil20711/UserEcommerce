@@ -23,5 +23,8 @@ public class Variant extends ArrayList<Variant> implements Serializable {
         this.name = name;
         this.price = price;
     }
+    public Variant(){
+
+    }
 
 }

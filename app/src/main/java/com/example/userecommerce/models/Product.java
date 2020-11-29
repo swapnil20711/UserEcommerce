@@ -21,24 +21,8 @@ public class Product implements Serializable {
     public List<Variant> variants;
 
 
-    public Product(String name, int price, float minQty) {
-        this.name = name;
-        this.price = price;
-        this.minQty = minQty;
-        this.type = WEIGHT_BASED;
-    }
     public Product(){
 
-    }
-    public Product(String name) {
-        this.name = name;
-        this.type = VARIANT_BASED;
-    }
-
-    public Product(String name, List<Variant> variants) {
-        type = VARIANT_BASED;
-        this.name = name;
-        this.variants = variants;
     }
 
     @Override
