@@ -4,24 +4,43 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.userecommerce.adapters.ProductsAdapter;
 import com.example.userecommerce.databinding.ActivityMainBinding;
+import com.example.userecommerce.fcmsender.FCMSender;
+import com.example.userecommerce.fcmsender.MessageFormatter;
 import com.example.userecommerce.models.Cart;
+import com.example.userecommerce.models.CartItem;
 import com.example.userecommerce.models.Inventory;
+import com.example.userecommerce.models.Order;
 import com.example.userecommerce.models.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,7 +57,41 @@ public class MainActivity extends AppCompatActivity {
         setContentView(b.getRoot());
         super.onCreate(savedInstanceState);
         app = (MyApp) getApplicationContext();
+        subscribeToTopic();
         loadPreviousData();
+
+
+    }
+    private void sendNotification(String order) {
+        String message = MessageFormatter
+                .getSampleMessage("admin", "Order placed", order, "https://cdn.pixabay.com/photo/2020/03/02/21/54/editorial-4897078_960_720.jpg");
+
+        new FCMSender().send(message, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new AlertDialog.Builder(MainActivity.this).setTitle("Failure").setMessage(e.toString()).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new AlertDialog.Builder(MainActivity.this).setTitle("Success").setMessage(response.toString()).show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void subscribeToTopic() {
+        FirebaseMessaging.getInstance().subscribeToTopic("messages");
+        Toast.makeText(this, "Subscribed", Toast.LENGTH_SHORT).show();
     }
 
     private void setUpProductList() {
@@ -52,8 +105,22 @@ public class MainActivity extends AppCompatActivity {
         b.checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                app.db.collection("orders").add(new Order("Swapnil Bhojwani", "119/307 Agarwal farm Mansarovar Jaipur", cart.cartItemMap, cart.subTotal, Order.OrderStatus.PLACED))
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                String order_id = documentReference.getId();
+                                sendNotification(order_id);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Order failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 Intent intent = new Intent(MainActivity.this, CartActivity.class);
                 intent.putExtra("data", cart);
+
                 startActivityForResult(intent, 1);
             }
         });
@@ -73,9 +140,8 @@ public class MainActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     Inventory inventory = snapshot.toObject(Inventory.class);
                     list = inventory.products;
-                }
-                else{
-                    list=new ArrayList<>();
+                } else {
+                    list = new ArrayList<>();
                 }
                 setUpProductList();
                 app.hideLoadingDialog();

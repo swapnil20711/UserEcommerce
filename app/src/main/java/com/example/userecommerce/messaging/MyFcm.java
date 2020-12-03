@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -27,12 +28,11 @@ public class MyFcm extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        String message = remoteMessage.getData().get("versions");
-        Log.e("FCM versions", message + "");
+        createNotificationChannel();
+//        Toast.makeText(this, "Aa gaya", Toast.LENGTH_SHORT).show();
         Log.e("FCM Title", remoteMessage.getNotification().getTitle());
         Log.e("FCM Body", remoteMessage.getNotification().getBody());
 
-        createNotificationChannel();
 
         //Intent code
         Intent resultIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
