@@ -32,22 +32,13 @@ public class MyFcm extends FirebaseMessagingService {
 //        Toast.makeText(this, "Aa gaya", Toast.LENGTH_SHORT).show();
         Log.e("FCM Title", remoteMessage.getNotification().getTitle());
         Log.e("FCM Body", remoteMessage.getNotification().getBody());
+        String title=remoteMessage.getData().get("title");
+        String body=remoteMessage.getData().get("body");
 
-
-        //Intent code
-        Intent resultIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
-        // Create the TaskStackBuilder and add the intent, which inflates the back stack
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntentWithParentStack(resultIntent);
-        // Get the PendingIntent containing the entire back stack
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_add)
-                .setContentTitle(remoteMessage.getNotification().getTitle())
-                .setContentText(remoteMessage.getNotification().getBody())
-                .setChannelId(CHANNEL_ID)
-                .setContentIntent(resultPendingIntent)
+                .setContentTitle(title)
+                .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);

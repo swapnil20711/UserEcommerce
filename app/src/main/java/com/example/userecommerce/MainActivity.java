@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jetbrains.annotations.NotNull;
@@ -59,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
         app = (MyApp) getApplicationContext();
         subscribeToTopic();
         loadPreviousData();
-
-
     }
     private void sendNotification(String order) {
         String message = MessageFormatter
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void subscribeToTopic() {
-        FirebaseMessaging.getInstance().subscribeToTopic("messages");
+        FirebaseMessaging.getInstance().subscribeToTopic("users");
         Toast.makeText(this, "Subscribed", Toast.LENGTH_SHORT).show();
     }
 
@@ -110,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 String order_id = documentReference.getId();
+                                documentReference.update("order_id",order_id);
                                 sendNotification(order_id);
                             }
                         }).addOnFailureListener(new OnFailureListener() {

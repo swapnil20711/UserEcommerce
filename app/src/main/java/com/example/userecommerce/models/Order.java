@@ -2,7 +2,6 @@ package com.example.userecommerce.models;
 
 import com.google.firebase.Timestamp;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Order {

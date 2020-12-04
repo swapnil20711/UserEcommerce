@@ -5,8 +5,8 @@ public class MessageFormatter {
             "  \"to\": \"/topics/%s\"," +
             "  \"notification\": {" +
             "       \"title\":\"%s\"," +
-            "       \"body\":\"%s\"" +
-            "       \"image\":\"%s\","+
+            "       \"body\":\"%s\"," +
+            "       \"image\":\"%s\""+
             "   }" +
             "}";
 
