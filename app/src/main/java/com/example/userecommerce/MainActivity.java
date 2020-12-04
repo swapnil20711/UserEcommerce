@@ -1,6 +1,8 @@
 package com.example.userecommerce;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.userecommerce.adapters.ProductsAdapter;
 import com.example.userecommerce.databinding.ActivityMainBinding;
+import com.example.userecommerce.databinding.UserDetailsBinding;
 import com.example.userecommerce.fcmsender.FCMSender;
 import com.example.userecommerce.fcmsender.MessageFormatter;
 import com.example.userecommerce.models.Cart;
@@ -24,6 +27,7 @@ import com.example.userecommerce.models.Order;
 import com.example.userecommerce.models.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         subscribeToTopic();
         loadPreviousData();
     }
+
     private void sendNotification(String order) {
         String message = MessageFormatter
                 .getSampleMessage("admin", "Order placed", order, "https://cdn.pixabay.com/photo/2020/03/02/21/54/editorial-4897078_960_720.jpg");
@@ -102,26 +107,47 @@ public class MainActivity extends AppCompatActivity {
         b.recyclerView.addItemDecoration(itemDecor);
         b.recyclerView.setAdapter(adapter);
         b.checkout.setOnClickListener(new View.OnClickListener() {
+            UserDetailsBinding binding = UserDetailsBinding.inflate(getLayoutInflater());
             @Override
             public void onClick(View v) {
-                app.db.collection("orders").add(new Order("Swapnil Bhojwani", "119/307 Agarwal farm Mansarovar Jaipur", cart.cartItemMap, cart.subTotal, Order.OrderStatus.PLACED))
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setView(binding.getRoot())
+                        .setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                String order_id = documentReference.getId();
-                                documentReference.update("order_id",order_id);
-                                sendNotification(order_id);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Order failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Intent intent = new Intent(MainActivity.this, CartActivity.class);
-                intent.putExtra("data", cart);
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (binding.userNumber.getText().toString().isEmpty() || binding.userAddress.getText().toString().isEmpty() || binding.userName.getText().toString().isEmpty()) {
+                                    Toast.makeText(app, "All fields are required", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                else {
+                                    submitOrder(binding.userName.getText().toString(), binding.userAddress.getText().toString(), binding.userNumber.getText().toString());
+                                    Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                                    intent.putExtra("data", cart);
 
-                startActivityForResult(intent, 1);
+                                    startActivityForResult(intent, 1);
+                                }
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+
+            }
+        });
+    }
+
+    private void submitOrder(String userName, String userAddress, String userNumber) {
+        app.db.collection("orders").add(new Order(userName, userAddress, userNumber, cart.cartItemMap, cart.subTotal, Order.OrderStatus.PLACED))
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String order_id = documentReference.getId();
+                        documentReference.update("order_id", order_id);
+                        sendNotification(order_id);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "Order failed", Toast.LENGTH_SHORT).show();
             }
         });
     }

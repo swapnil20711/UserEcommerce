@@ -6,14 +6,16 @@ import java.util.Map;
 
 public class Order {
     public String userName, userAddress;
+    private String userNumber;
     public Map<String, CartItem> map;
     public int subTotal;
     public int status;
     public Timestamp timestamp;
 
-    public Order(String userName, String userAddress, Map<String, CartItem> map, int subTotal, int status) {
+    public Order(String userName, String userAddress,String userNumber, Map<String, CartItem> map, int subTotal, int status) {
         this.userName = userName;
         this.userAddress = userAddress;
+        this.userNumber = userNumber;
         this.map = map;
         this.subTotal = subTotal;
         this.status = status;
